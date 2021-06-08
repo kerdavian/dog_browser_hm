@@ -14,7 +14,12 @@ class SearchImage extends ContentComponent {
   // Ez a metódus letölti az adatot az API-ról
   async getImages(dogbreed) {
 
-    if(!dogbreed) {
+    //eltávolítom a fölösleges szóközöket
+    dogbreed = dogbreed.replace(/\s\s+/g, ' ');
+    dogbreed = dogbreed.trim();
+    // console.log(dogbreed);
+
+    if (!dogbreed) {
       this.displayError('Nem lett beírva semmi a keresőbe, nem tudunk keresni!');
       // megállítjuk a getImages függvény futását
       return;
@@ -23,9 +28,15 @@ class SearchImage extends ContentComponent {
     let urlString = '';
     dogbreed = dogbreed.split(' ');
     // a dogbreed változó mostmár egy tömb!
-    if(dogbreed.length === 1) {
+
+    //mivel a tömb első elemét mindig kisbetűssé kell tenni, ezért érdemesebb itt megtenni. Így kevesebbszer kell leírni
+    dogbreed[0] = dogbreed[0].toLowerCase();
+
+
+    if (dogbreed.length === 1) {
       urlString = `https://dog.ceo/api/breed/${dogbreed[0]}/images`;
     } else if (dogbreed.length === 2) {
+      dogbreed[1] = dogbreed[1].toLowerCase();
       urlString = `https://dog.ceo/api/breed/${dogbreed[1]}/${dogbreed[0]}/images`;
     }
     const response = await fetch(urlString);
@@ -33,7 +44,7 @@ class SearchImage extends ContentComponent {
     // a data változó egy objecteket tartalmazó tömb
     return data;
   }
- 
+
   // ez a metódus megjelenít egy képet (véletlenszerűen)
   displayImage(data) {
     this.clearErrors();
@@ -59,7 +70,7 @@ class SearchImage extends ContentComponent {
     // az arrow functionnek nincs saját this kulcsszva, tehát az arrow fucntion-ön belül a this
     // ugyanazt fogja jelenteni mint azon kívül (a class-t amiben vagyunk)
     document.querySelector('.dog-search button').addEventListener('click', (event) => {
-      event.preventDefault(); 
+      event.preventDefault();
       // console.log(event);
       const searchTerm = document.querySelector('#dogSearchInput').value;
       // mivel a getImages egy async method, ezért ez is promise-al tér vissza
@@ -67,7 +78,7 @@ class SearchImage extends ContentComponent {
       // a then metódus bementi paramétere egy callback funciton, ami akkor fut le amikor
       // a promise beteljesül (akkor jön létre a data amit visszaad a getImages metódus)
       // ha az arrow funciton-ben csak egy bemeneti paraméter van, akkor a zárójel elhagyható
-      this.getImages(searchTerm).then( result => {
+      this.getImages(searchTerm).then(result => {
         // ha csak egy dolgot kell csinálni az if block-ban, akkor a kódblokk {} elhagyható
         if (result) this.displayImage(result);
       });
