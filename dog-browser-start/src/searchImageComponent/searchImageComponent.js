@@ -48,7 +48,7 @@ class SearchImage extends ContentComponent {
   // ez a metódus megjelenít egy képet (véletlenszerűen)
   displayImage(data) {
     this.clearErrors();
-    this.clearContent();
+
     const image = document.createElement('img');
     // a data.message tömbből egy véletlenszerű elemet kiválasztunk
     image.src = data.message[Math.floor(Math.random() * data.message.length)];
@@ -63,6 +63,7 @@ class SearchImage extends ContentComponent {
     <form class="dog-search">
       <span class="search-icon"></span>
       <input type="text" id="dogSearchInput">
+      <input type="text" id="imageNumberInput" placeholder="1">
       <button>Search</button>
     </form>
     `;
@@ -78,10 +79,35 @@ class SearchImage extends ContentComponent {
       // a then metódus bementi paramétere egy callback funciton, ami akkor fut le amikor
       // a promise beteljesül (akkor jön létre a data amit visszaad a getImages metódus)
       // ha az arrow funciton-ben csak egy bemeneti paraméter van, akkor a zárójel elhagyható
-      this.getImages(searchTerm).then(result => {
-        // ha csak egy dolgot kell csinálni az if block-ban, akkor a kódblokk {} elhagyható
-        if (result) this.displayImage(result);
-      });
+
+      let DOMcount = document.querySelector('#imageNumberInput');
+      let count;
+
+      // miért csináltam így?
+      // Az gond, hogy ha az input field értékét először parseInt-elem, akkor az olyan értékekre, mint a "3r" vagy "5zt" 3 ill. 5 lesz a visszatérési érték. Sztem ez így nem megfelelő. Ezért inkább első körben, megnézem, hogy a bevitt érték szám-e. Ilyenkor "3r" és az "5zt",helyesen NaN értéket fog visszadani. Azonban ekkor pedig az probléma, hogy úgy tűnik az isNaN() nem tudja lekezelni az üres input-ot. Szerinte az üres string nem NaN. Ezért miután levizsgáltuk, hogy az input szám-e, a parseInt függvénnyel még mindig átkell alakítanunk, ugyanis a mező lehet üres is. Érdekes, hogy ha nem alakítjuk számmá az üres mezőt akkor egy üres string jön vissza, ami szintén nem NaN. Átalakítás után, azonban az üres mező NaN lesz. Így ezután újra kell egy isNaN vizsgálat, majd ezután csak a nullánál nagyobb értékeket vesszük figyelembe! Itt persze lehet másféle  konvenció is.
+
+      if (isNaN(DOMcount.value)) {
+        count = 1;
+      } else {
+        count = Math.floor(parseInt(DOMcount.value));
+        if (isNaN(count)) { // ez azért kell, mert, ha 
+          count = 1;
+        } else if (count < 1) {
+          count = 1;
+        }
+      }
+      // console.log(count);
+
+      this.clearContent();
+      for (let i = 0; i < count; i++) {
+        this.getImages(searchTerm).then(result => {
+          // ha csak egy dolgot kell csinálni az if block-ban, akkor a kódblokk {} elhagyható
+          if (result) this.displayImage(result);
+        });
+
+      }
+
+
     });
 
   }
