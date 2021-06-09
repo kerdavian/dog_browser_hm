@@ -30,32 +30,15 @@ class ListBreeds extends ContentComponent {
   dataStore(data) {
     localStorage.setItem('dogs', JSON.stringify(data));
     storedDogs = JSON.parse(localStorage.getItem('dogs'));
-    // console.log(storedDogs.message);
-
-    // let key;
-    // let value;
-    // for (const breed in data.message) {
-    //   if (data.message[breed].length !== 0) {
-    //     for (const subBreed of data.message[breed]) {
-    //       key = subBreed;
-    //       value = breed;
-    //       localStorage.setItem(key, value);
-    //     }
-    //   } else {
-    //     key = breed;
-    //     value = "";
-    //     localStorage.setItem(key, value);
-    //   }
-    // }
-
-
-
   }
 
   createListItem(title) {
     const item = document.createElement('div');
     item.classList.add('breed-list-item');
     item.innerHTML = title;
+    item.addEventListener('click', () => {
+      this.handleContentDisplay(title);
+    });
     document.querySelector('#content').appendChild(item);
   }
 
@@ -78,15 +61,6 @@ class ListBreeds extends ContentComponent {
       }
     }
   }
-
-
-  // displayListFromLocalStorage() {
-  //   for (let i = 0; i < localStorage.length; i++) {
-  //     let key = localStorage.key(i);
-  //     let value = localStorage.getItem(key);
-  //     this.createListItem((key + ' ' + value).trim());
-  //   }
-  // }
 
   render() {
     const button = document.createElement('button');
