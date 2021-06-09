@@ -1,5 +1,7 @@
 import '../css/searchImageComponent.css';
 import ContentComponent from '../contentComponent/contentComponent';
+import yall from 'yall-js';
+import preloading from '../img/preloading.gif';
 
 
 class SearchImage extends ContentComponent {
@@ -51,9 +53,20 @@ class SearchImage extends ContentComponent {
 
     const image = document.createElement('img');
     // a data.message tömbből egy véletlenszerű elemet kiválasztunk
-    image.src = data.message[Math.floor(Math.random() * data.message.length)];
+    image.src = '../img/preloading.gif';
+    image.dataset.src = data.message[Math.floor(Math.random() * data.message.length)];
+    image.classList.add('lazy');
     document.querySelector('#content').appendChild(image);
-    // console.log(data);
+    yall({
+      events: {
+        load: event => {
+          if (event.target.nodeName == "IMG" && !event.target.classList.contains("lazy")) {
+            event.target.classList.add("yall-loaded");
+          }
+        }
+      }
+    });
+
   }
 
 

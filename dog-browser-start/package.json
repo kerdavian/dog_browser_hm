@@ -43,5 +43,9 @@
     "webpack": "^5.33.2",
     "webpack-cli": "^4.6.0",
     "webpack-dev-server": "^3.11.2"
+  },
+  "dependencies": {
+    "bootstrap": "^5.0.1",
+    "yall-js": "^3.2.0"
   }
 }

@@ -36,9 +36,15 @@ input {
   top: -10px;
 }
 
+#content img.yall-loaded {
+  opacity: 1;
+}
+
 #content img {
   border-radius: 10px;
   object-fit: cover;
   max-width: 100%;
   margin: 1rem;
+  transition: 2s opacity ease-out;
+  opacity: 0.25;
 }
